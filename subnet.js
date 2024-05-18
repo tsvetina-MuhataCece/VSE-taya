@@ -56,3 +56,4 @@ function displayResults(results) {
         <p>Initial network address: ${results.initialAddress}</p>
     `;
 }
+ 
