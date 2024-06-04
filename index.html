@@ -5,86 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subnetter™</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
-    <h1>Welcome to Subnetter, an IPv4 subnet calculator</h1> 
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style>
         table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;}
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
 
-        tr:hover {background-color: #D6EEEE;}
+        tr:hover { background-color: #D6EEEE; }
         
-        th{background-color: #dddddd;}
+        th { background-color: #dddddd; }
 
         form, aside {
             flex: 1;
-            max-width: 45%;}
+            max-width: 45%;
+        }
+
+        input[type="text"], input[type="number"] {
+            max-width: 45%;
+        }
+
+        .network-name {
+            text-align: center;
+            font-weight: bold;
+            background-color: #dddddd;
+        }
+
+        .rainbow-button {
+            width:calc(20vw + 6px);
+            height:calc(8vw + 6px);
+            background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+            border-radius:5px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-transform:uppercase;
+            font-size:40px;
+            font-weight:bold;
+        }
+        .rainbow-button:after {
+            content:attr(alt);
+            width:20vw;
+            height:8vw;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .rainbow-button:hover {
+            animation:slidebg 2s linear infinite;
+        }
+
+        @keyframes slidebg {
+            to {background-position:20vw;}
+        }
+
+        .add-remove-buttons {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+        }
+
+        .tableContainer {
+            position: relative;
+            margin-top: 50px;
+        }
     </style>
-    
 </head>
 <body>
+    <h1>Welcome to Subnetter, an IPv4 subnet calculator</h1> 
     
-    <form id="subnetForm">
-        <label for="ipv4Input">Check IPv4 Address characteristics (e.g., 192.168.1.1/24):</label><br>
-        <input type="text" id="ipv4Input" name="ipv4Input" required><br><br>
-        <button type="submit">Subnet it!</button>
-    </form>
-    <div id="results"></div>
-    <script src="subnet.js"></script>
-    <br><br>
+    <div id="tablesContainer">
+        <div class="tableContainer">
+            <button class="removeTable">Remove Table</button>
+            <form class="subnetForm">
+                <label for="ipv4Input">Enter IPv4 Address (e.g., 192.168.1.1/24):</label><br>
+                <input type="text" class="ipv4Input" name="ipv4Input" required><br><br>
 
-    <aside><h>VLSM</h>
-        <table>
-            <tr>
-                <th>Device</th>
-                <th>Interface</th>
-                <th>Connected to</th>
-            </tr>
-            <tr>
-                <th rowspan="4">Pick a device</th>            
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <th rowspan="4">Pick a device</th>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <th rowspan="4">Pick a device</th>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-            <tr>
-                <td><br></td>
-                <td><br></td>
-            </tr>
-        </table>
-    </aside>
-    </html>
+                <label for="hostsInput">Enter number of hosts needed (minimum 2):</label><br>
+                <input type="number" class="hostsInput" name="hostsInput" min="2" required><br><br>
+
+                <button type="submit">Subnet it!</button>
+            </form>
+
+            <div class="add-remove-buttons">
+                <button class="addRow">Add Row</button>
+            </div>
+            <table class="networkTable">
+                <tr>
+                    <th>Device</th>
+                    <th>Interface</th>
+                    <th>Address</th>
+                    <th rowspan=rowCount>Name</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="device">
+                            <option value="Router">Router</option>
+                            <option value="Server">Server</option>
+                            <option value="Printer">Printer</option>
+                            <option value="PC">PC</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Tablet">Tablet</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option value="G0/0">G0/0</option>
+                            <option value="G0/1">G0/1</option>
+                            <option value="G0/2">G0/2</option>
+                            <option value="FastEthernet0">FastEthernet0</option>
+                        </select>
+                    </td>
+                    <td class="address" contenteditable="true"></td>
+                    <td class="nameCell" contenteditable="true" maxlength="30" rowspan="2"></td>
+                    <td><button class="moveUp">Up</button> <button class="moveDown">Down</button> <button class="removeRow">Remove</button></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="device">
+                            <option value="Router">Router</option>
+                            <option value="Server">Server</option>
+                            <option value="Printer">Printer</option>
+                            <option value="PC">PC</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Tablet">Tablet</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option value="G0/0">G0/0</option>
+                            <option value="G0/1">G0/1</option>
+                            <option value="G0/2">G0/2</option>
+                            <option value="FastEthernet0">FastEthernet0</option>
+                        </select>
+                    </td>
+                    <td class="address" contenteditable="true"></td>
+                    <td><button class="moveUp">Up</button> <button class="moveDown">Down</button> <button class="removeRow">Remove</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <button id="addTable" class="rainbow-button">Add New Network Table</button>
+
+    <script src="subnet.js"></script>
 </body>
+</html>
