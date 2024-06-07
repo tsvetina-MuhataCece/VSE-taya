@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     let deviceCounts = { Router: 0, Server: 0, Printer: 0, PC: -1, Laptop: 0, Phone: 0, Tablet: 0 };
     let nextHostAddress = '';
-
+    let numberOfContainers = 2;
+    
     function initializeForm(form) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
