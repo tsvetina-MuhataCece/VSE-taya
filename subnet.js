@@ -120,24 +120,26 @@ document.addEventListener("DOMContentLoaded", function () {
         networkNameDiv.insertAdjacentElement('afterend', resultTable);
     }
 
-    document.querySelector('#addTable').addEventListener('click', function () {
-        const tableTemplate = document.querySelector('.tableContainer').cloneNode(true);
-        document.querySelector('#tablesContainer').appendChild(tableTemplate);
+    const tableTemplate = document.querySelector('.tableContainer').cloneNode(true);
 
-        initializeForm(tableTemplate.querySelector('.subnetForm'));
-        addRemoveTableListener(tableTemplate);
+    document.querySelector('#addTable').addEventListener('click', function () {
+    const newTable = tableTemplate.cloneNode(true);
+        document.querySelector('#tablesContainer').appendChild(newTable);
+
+        initializeForm(newTable.querySelector('.subnetForm'));
+        addRemoveTableListener(newTable);
     });
 
     function addRemoveTableListener(tableContainer) {
         const removeButton = tableContainer.querySelector('.removeTable');
-        removeButton.addEventListener('click', function () {
-            tableContainer.remove();
+            removeButton.addEventListener('click', function () {
+                tableContainer.remove();
         });
     }
 
     document.querySelectorAll('.subnetForm').forEach(form => initializeForm(form));
-
     document.querySelectorAll('.tableContainer').forEach(tableContainer => addRemoveTableListener(tableContainer));
+
 
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('addRow')) {
@@ -170,6 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             nextHostAddress = calculateNextHostAddress(nextHostAddress);
             sortTableDevices(table);
+            numberOfContainers++;
             updateButtons(table);
         }
     });
@@ -243,9 +246,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('removeRow')) {
+        if (event.target.classList.contains('removeRow') && numberOfContainers>2) {
             const row = event.target.closest('tr');
             const table = row.closest('table');
+            numberOfContainers--;
             row.remove();
             updateButtons(table);
         } else if (event.target.classList.contains('moveUp')) {
