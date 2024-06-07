@@ -93,25 +93,8 @@ input[type="text"], input[type="number"] {
     background-color: #dddddd;
 }
 
-/*
 .rainbow-button {
-    background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red);
-    animation: rainbow 5s linear infinite;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin: 15px 15px;
-    cursor: pointer;
-}
-
-@keyframes rainbow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-}
-*/
-
-.rainbow-button {
-    animation: rainbow 2s linear infinite;
+    animation: rainbow 20s linear infinite;
     cursor: pointer;
     color: white;
     border: none;
@@ -122,14 +105,17 @@ input[type="text"], input[type="number"] {
 }
 
 @keyframes rainbow {
-    0% {background: red;}
-    14% {background: orange;}
-    28% {background: yellow;}
-    42% {background: lime;}
-    57% {background: blue;}
-    71% {background: indigo;}
-    85% {background: violet;}
-    100% {background: red;}
+    0% {background: rgba(255, 0, 0, 1)}
+    10% {background: rgba(255, 154, 0, 1)}
+    20% {background: rgba(208, 222, 33, 1)}
+    30% {background: rgba(79, 220, 74, 1)}
+    40% {background: rgba(63, 218, 216, 1)}
+    50% {background: rgba(47, 201, 226, 1)}
+    60% {background: rgba(28, 127, 238, 1)}
+    70% {background: rgba(95, 21, 242, 1)}
+    80% {background: rgba(186, 12, 248, 1)}
+    90% {background: rgba(251, 7, 217, 1)}
+    100% {background: rgba(255, 0, 0, 1)}
 }
 
 .add-remove-buttons {

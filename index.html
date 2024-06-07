@@ -88,14 +88,20 @@
             </form>
 
             <div class="add-remove-buttons">
-                <button class="addRow">Add Row</button>
+                <button class="addRow">Add Row/Device</button>
+                <button class="assignIP">Assign IP Addresses</button>
+                <button class="sortTable">Sort by Device</button>
             </div>
+
             <table class="networkTable">
+                <tr>
+                    <th colspan="4" class="nameCell" rowspan="2">Name</th>
+                </tr>
+                <tr></tr> <!--This empty row is just to maintain the structure for the rowspan-->
                 <tr>
                     <th>Device</th>
                     <th>Interface</th>
                     <th>Address</th>
-                    <th rowspan=rowCount>Name</th>
                     <th>Action</th>
                 </tr>
                 <tr>
@@ -119,7 +125,6 @@
                         </select>
                     </td>
                     <td class="address" contenteditable="true"></td>
-                    <td class="nameCell" contenteditable="true" maxlength="30" rowspan="2"></td>
                     <td><button class="moveUp">Up</button> <button class="moveDown">Down</button> <button class="removeRow">Remove</button></td>
                 </tr>
                 <tr>
