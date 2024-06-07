@@ -1,8 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
     let deviceCounts = { Router: 0, Server: 0, Printer: 0, PC: -1, Laptop: 0, Phone: 0, Tablet: 0 };
     let nextHostAddress = '';
-    let numberOfContainers = 2;
+
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('moveUp')) {
+        const row = event.target.closest('tr');
+        if (row.previousElementSibling && !row.previousElementSibling.querySelector('th')) {
+            row.parentNode.insertBefore(row, row.previousElementSibling);
+            updateButtons(row.closest('table'));
+        } 
+    }
+});
+
+document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('removeRow')) {
+            const table = event.target.closest('table');
+            const rows = table.querySelectorAll('tr:not(:first-child)');
+        if (rows.length <= 4) {
+            alert("Cannot delete the last two rows.");
+        } else {
+            const row = event.target.closest('tr');
+            row.remove();
+            updateButtons(table);
+        }
+    }
+});
     
+
     function initializeForm(form) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -25,14 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const initialSlash = parseInt(ipParts[1], 10);
 
             if (initialSlash > 30) {
-                alert("/mask can't be greater than 30!");
+                alert("/mask shouldn't be greater than 30!");
                 return;
             }
 
             const hostBits = calculateRequiredBits(hostsInput);
             const newSlash = 32 - hostBits;
 
-            if (newSlash >= initialSlash) {
+            if (powerOfTwo > initialSlash) {
                 alert("The subnet mask for the desired number of hosts must be larger than the initial subnet mask.");
                 return;
             }
@@ -40,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const results = calculateSubnet(ipAddress, hostsInput, initialSlash);
             displayResults(results, form);
             sortTableDevices(form.closest('.tableContainer').querySelector('.networkTable'));
-            assignIPAddresses(form.closest('.tableContainer').querySelector('.networkTable'), results.firstHostAddress);
+            assignIPAddresses(form.closest('.tableContainer').querySelector('.networkTable'), results.firstHostAddress, results.lastHostAddress);
         });
     }
 
@@ -59,6 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function ipToBin(ip) {
             return ip.split('.').map(dec => decToBin(parseInt(dec, 10))).join('');
+        }
+
+        function binToIp(bin) {
+            return bin.match(/.{8}/g).map(b => parseInt(b, 2)).join('.');
         }
 
         function calculateSubnetMask(prefixLength) {
@@ -89,9 +117,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const broadcastAddress = broadcastAddressParts.join('.');
         const subnetMaskAddress = subnetMask.join('.');
 
+        const lastHostAddress = calculateLastHostAddress(broadcastAddress);
+
         nextHostAddress = firstHostAddress;
 
-        return { networkAddress, subnetMaskAddress, broadcastAddress, firstHostAddress };
+        return { networkAddress, subnetMaskAddress, broadcastAddress, firstHostAddress, lastHostAddress };
+    }
+
+    function calculateLastHostAddress(broadcastAddress) {
+        function ipToBin(ip) {
+            return ip.split('.').map(dec => dec.toString(2).padStart(8, '0')).join('');
+        }
+
+        function binToIp(bin) {
+            return bin.match(/.{8}/g).map(b => parseInt(b, 2)).join('.');
+        }
+
+        let broadcastBin = ipToBin(broadcastAddress);
+        let lastHostBin = (parseInt(broadcastBin, 2) - 1).toString(2).padStart(32, '0');
+        let lastHostAddress = binToIp(lastHostBin);
+
+        return lastHostAddress;
     }
 
     function displayResults(results, form) {
@@ -102,12 +148,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 <th>Subnet Mask</th>
                 <th>Broadcast Address</th>
                 <th>First Host Address</th>
+                <th>Last Host Address</th>
             </tr>
             <tr>
                 <td>${results.networkAddress}</td>
                 <td>${results.subnetMaskAddress}</td>
                 <td>${results.broadcastAddress}</td>
                 <td>${results.firstHostAddress}</td>
+                <td>${results.lastHostAddress}</td>
             </tr>
         `;
 
@@ -187,7 +235,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 parts[i] = 0;
             }
         }
-        return parts.join('.');
+
+        const nextAddress = parts.join('.');
+
+        if (nextAddress === lastAddress) {
+            return null;
+        }
+
+        return nextAddress;
     }
 
     function sortTableDevices(table) {
@@ -205,43 +260,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         rows.forEach(row => table.appendChild(row));
-
-        updateButtons(table);
     }
 
-    function updateButtons(table) {
-        const rows = Array.from(table.querySelectorAll('tr:not(:first-child)'));
-        rows.forEach((row, index) => {
-            const moveUpButton = row.querySelector('.moveUp');
-            const removeButton = row.querySelector('.removeRow');
-            if (index === 0) {
-                moveUpButton.style.display = 'none';
-            } else {
-                moveUpButton.style.display = 'inline-block';
-            }
-            if (rows.length <= 2) {
-                removeButton.style.display = 'none';
-            } else {
-                removeButton.style.display = 'inline-block';
-            }
-        });
-    }
-
-    function assignIPAddresses(table, startAddress) {
-        let currentAddress = startAddress;
-        const rows = Array.from(table.querySelectorAll('tr:not(:first-child)'));
-        rows.forEach(row => {
-            const addressCell = row.querySelector('.address');
-            addressCell.textContent = currentAddress;
-            currentAddress = calculateNextHostAddress(currentAddress);
-        });
-    }
-
-    document.addEventListener('change', function (event) {
-        if (event.target.classList.contains('device')) {
+    document.getElementById('addTable').addEventListener('click', addTable);
+    document.querySelectorAll('.subnetForm').forEach(initializeForm);
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('addRow')) {
+            addRow(event);
+        } 
+        else  if (event.target.classList.contains('device')) {
             const table = event.target.closest('.networkTable');
             sortTableDevices(table);
-            assignIPAddresses(table, nextHostAddress);
         }
     });
 
@@ -253,16 +282,19 @@ document.addEventListener("DOMContentLoaded", function () {
             row.remove();
             updateButtons(table);
         } else if (event.target.classList.contains('moveUp')) {
-            const row = event.target.closest('tr');
-            if (row.previousElementSibling) {
-                row.parentNode.insertBefore(row, row.previousElementSibling);
-                updateButtons(row.closest('table'));
-            }
+            moveUpRow(event);
         } else if (event.target.classList.contains('moveDown')) {
-            const row = event.target.closest('tr');
-            if (row.nextElementSibling) {
-                row.parentNode.insertBefore(row.nextElementSibling, row);
-                updateButtons(row.closest('table'));
+            moveDownRow(event);
+        } else if (event.target.classList.contains('removeTable')) {
+            removeTable(event);
+        } else if (event.target.classList.contains('assignIP')) {
+            const table = event.target.closest('.tableContainer').querySelector('.networkTable');
+            const firstHostAddress = table.dataset.firstHostAddress;
+            const lastHostAddress = table.dataset.lastHostAddress;
+            if (firstHostAddress && lastHostAddress) {
+                assignIPAddresses(table, firstHostAddress, lastHostAddress);
+            } else {
+                alert('Please enter a valid IPv4 address and number of hosts, then submit the form.');
             }
         }
     });

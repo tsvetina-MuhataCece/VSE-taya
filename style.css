@@ -93,14 +93,14 @@ input[type="text"], input[type="number"] {
     background-color: #dddddd;
 }
 
-/*
 .rainbow-button {
-    background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red);
-    animation: rainbow 5s linear infinite;
+    animation: rainbow 20s linear infinite;
+    cursor: pointer;
     color: white;
     border: none;
     padding: 10px;
     margin: 15px 15px;
+    border-radius: 15px;
     cursor: pointer;
 }
 
