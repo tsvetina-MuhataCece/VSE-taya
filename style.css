@@ -6,7 +6,7 @@ body {
 }
 
 .navbar{
-    background-color: rgb(215, 36, 36);
+    background-color: rgb(82, 180, 237);
     position: sticky;  
     top:0;
     border-radius: 0px 0px 15px 15px;
@@ -175,9 +175,25 @@ input[type="text"], input[type="number"] {
     text-decoration: none;
     outline: none;
     color: #fff;
+    background-color: #3e8e41;
+    border: none;
+    border-radius: 15px;
+}
+
+.styled-remove-button {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 0px 15px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
     background-color: #af4c4c;
     border: none;
     border-radius: 15px;
 }
 
-.styled-add-button:hover {background-color: #8e3e3e}
+.styled-remove-button:hover {background-color: #8e3e3e}
+.styled-add-button:hover {background-color: #377e3a}

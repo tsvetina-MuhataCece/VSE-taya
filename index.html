@@ -6,85 +6,25 @@
     <title>Subnetter™</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        tr:hover { background-color: #D6EEEE; }
-        
-        th { background-color: #dddddd; }
-
-        form, aside {
-            flex: 1;
-            max-width: 45%;
-        }
-
-        input[type="text"], input[type="number"] {
-            max-width: 45%;
-        }
-
-        .network-name {
-            text-align: center;
-            font-weight: bold;
-            background-color: #dddddd;
-        }
-
-        .rainbow-button {
-            width:calc(20vw + 6px);
-            height:calc(8vw + 6px);
-            background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
-            border-radius:5px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            text-transform:uppercase;
-            font-size:40px;
-            font-weight:bold;
-        }
-        .rainbow-button:after {
-            content:attr(alt);
-            width:20vw;
-            height:8vw;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-        .rainbow-button:hover {
-            animation:slidebg 2s linear infinite;
-        }
-
-        @keyframes slidebg {
-            to {background-position:20vw;}
-        }
-
-        .add-remove-buttons {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-        }
-
-        .tableContainer {
-            position: relative;
-            margin-top: 50px;
-        }
-    </style>
 </head>
 <body>
-    <h1>Welcome to Subnetter, an IPv4 subnet calculator</h1> 
-    
+    <nav class="navbar">    
+        <div class="navdiv">
+             <div class="logo"><p>Welcome to Subnetter, an IPv4 subnet calculator!</p></div>
+        </div>
+    </nav>
+
     <div id="tablesContainer">
         <div class="tableContainer">
-            <button class="removeTable">Remove Table</button>
+            <button class="removeTable styled-remove-button">Remove Table</button>
             <form class="subnetForm">
                 <label for="ipv4Input">Enter IPv4 Address (e.g., 192.168.1.1/24):</label><br>
-                <input type="text" class="ipv4Input" name="ipv4Input" required><br><br>
+                <input type="text" class="ipv4Input styled-input" name="ipv4Input" required><br><br>
 
                 <label for="hostsInput">Enter number of hosts needed (minimum 2):</label><br>
-                <input type="number" class="hostsInput" name="hostsInput" min="2" required><br><br>
+                <input type="number" class="hostsInput styled-input" name="hostsInput" min="2" required><br><br>
 
-                <button type="submit">Subnet it!</button>
+                <button type="submit " class="styled-button">Subnet it!</button>
             </form>
 
             <div class="add-remove-buttons">
@@ -152,7 +92,7 @@
             </table>
         </div>
     </div>
-
+    
     <button id="addTable" class="rainbow-button">Add New Network Table</button>
 
     <script src="subnet.js"></script>
